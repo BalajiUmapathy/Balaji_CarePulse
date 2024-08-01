@@ -15,7 +15,7 @@
 
   <h3 align="center">A HealthCare Management System</h3>
 <div align="center">
-     Visit the website by clicking this!!!  on <a href="https://care-pulse-balaji.vercel.app/" target="_blank"><b>Care Pulse </b></a> 
+     Visit the website by clicking on <a href="https://care-pulse-balaji.vercel.app/" target="_blank"><b>Care Pulse </b></a> 
     </div>
 </div>
    
