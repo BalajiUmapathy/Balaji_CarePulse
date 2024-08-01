@@ -12,7 +12,6 @@ import {
   messaging,
 } from "../appwrite.config";
 import { formatDateTime, parseStringify } from "../utils";
-import { getAppointmentSchema } from "../validation";
 
 //  CREATE APPOINTMENT
 export const createAppointment = async (
@@ -26,131 +25,82 @@ export const createAppointment = async (
       appointment
     );
 
-    // revalidatePath("/admin");
+    revalidatePath("/admin");
     return parseStringify(newAppointment);
   } catch (error) {
     console.error("An error occurred while creating a new appointment:", error);
   }
 };
-// getRecentAppointmentList
+
+//  GET RECENT APPOINTMENTS
 export const getRecentAppointmentList = async () => {
+  try {
+    const appointments = await databases.listDocuments(
+      DATABASE_ID!,
+      APPOINTMENT_COLLECTION_ID!,
+      [Query.orderDesc("$createdAt")]
+    );
 
-      try {
-        const appointments = await databases.listDocuments(
-          DATABASE_ID!,
-          APPOINTMENT_COLLECTION_ID!,
-          [Query.orderDesc('$createdAt')]
-        );
-        const initialCounts = {
-          scheduledCount: 0,
-          pendingCount: 0,
-          cancelledCount: 0,
-        };
-      
-        const counts = (appointments.documents as Appointment[]).reduce(
-          (acc, appointment) => {
-            if (appointment.status === 'scheduled') {
-              acc.scheduledCount += 1;
-            } else if (appointment.status === 'pending') {
-              acc.pendingCount += 1;
-            } else if (appointment.status === 'cancelled') {
-              acc.cancelledCount += 1;
-            }
-            return acc;
-          },
-          initialCounts
-        );
+    // const scheduledAppointments = (
+    //   appointments.documents as Appointment[]
+    // ).filter((appointment) => appointment.status === "scheduled");
 
-          const data = {
-            totalCount: appointments.total,
-            ...counts,
-            documents: appointments.documents
-          }
+    // const pendingAppointments = (
+    //   appointments.documents as Appointment[]
+    // ).filter((appointment) => appointment.status === "pending");
 
+    // const cancelledAppointments = (
+    //   appointments.documents as Appointment[]
+    // ).filter((appointment) => appointment.status === "cancelled");
 
-          return parseStringify(data)
+    // const data = {
+    //   totalCount: appointments.total,
+    //   scheduledCount: scheduledAppointments.length,
+    //   pendingCount: pendingAppointments.length,
+    //   cancelledCount: cancelledAppointments.length,
+    //   documents: appointments.documents,
+    // };
 
-      
-        console.log(counts);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-      
+    const initialCounts = {
+      scheduledCount: 0,
+      pendingCount: 0,
+      cancelledCount: 0,
+    };
 
+    const counts = (appointments.documents as Appointment[]).reduce(
+      (acc, appointment) => {
+        switch (appointment.status) {
+          case "scheduled":
+            acc.scheduledCount++;
+            break;
+          case "pending":
+            acc.pendingCount++;
+            break;
+          case "cancelled":
+            acc.cancelledCount++;
+            break;
+        }
+        return acc;
+      },
+      initialCounts
+    );
 
+    const data = {
+      totalCount: appointments.total,
+      ...counts,
+      documents: appointments.documents,
+    };
 
+    return parseStringify(data);
+  } catch (error) {
+    console.error(
+      "An error occurred while retrieving the recent appointments:",
+      error
+    );
+  }
+};
 
-
-// //  GET RECENT APPOINTMENTS
-// export const getRecentAppointmentList = async () => {
-//   try {
-//     const appointments = await databases.listDocuments(
-//       DATABASE_ID!,
-//       APPOINTMENT_COLLECTION_ID!,
-//       [Query.orderDesc("$createdAt")]
-//     );
-
-//     // const scheduledAppointments = (
-//     //   appointments.documents as Appointment[]
-//     // ).filter((appointment) => appointment.status === "scheduled");
-
-//     // const pendingAppointments = (
-//     //   appointments.documents as Appointment[]
-//     // ).filter((appointment) => appointment.status === "pending");
-
-//     // const cancelledAppointments = (
-//     //   appointments.documents as Appointment[]
-//     // ).filter((appointment) => appointment.status === "cancelled");
-
-//     // const data = {
-//     //   totalCount: appointments.total,
-//     //   scheduledCount: scheduledAppointments.length,
-//     //   pendingCount: pendingAppointments.length,
-//     //   cancelledCount: cancelledAppointments.length,
-//     //   documents: appointments.documents,
-//     // };
-
-//     const initialCounts = {
-//       scheduledCount: 0,
-//       pendingCount: 0,
-//       cancelledCount: 0,
-//     };
-
-//     const counts = (appointments.documents as Appointment[]).reduce(
-//       (acc, appointment) => {
-//         switch (appointment.status) {
-//           case "scheduled":
-//             acc.scheduledCount++;
-//             break;
-//           case "pending":
-//             acc.pendingCount++;
-//             break;
-//           case "cancelled":
-//             acc.cancelledCount++;
-//             break;
-//         }
-//         return acc;
-//       },
-//       initialCounts
-//     );
-
-//     const data = {
-//       totalCount: appointments.total,
-//       ...counts,
-//       documents: appointments.documents,
-//     };
-
-//     return parseStringify(data);
-//   } catch (error) {
-//     console.error(
-//       "An error occurred while retrieving the recent appointments:",
-//       error
-//     );
-//   }
-// };
-
-  // SEND SMS NOTIFICATION
+//  SEND SMS NOTIFICATION
 export const sendSMSNotification = async (userId: string, content: string) => {
   try {
     // https://appwrite.io/docs/references/1.5.x/server-nodejs/messaging#createSms
@@ -166,7 +116,7 @@ export const sendSMSNotification = async (userId: string, content: string) => {
   }
 };
 
-// //  UPDATE APPOINTMENT
+//  UPDATE APPOINTMENT
 export const updateAppointment = async ({
   appointmentId,
   userId,
