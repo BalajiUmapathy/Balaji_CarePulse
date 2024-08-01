@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import * as Sentry from '@sentry/nextjs'
 
 
 import Link from 'next/link';
@@ -8,7 +9,7 @@ import { getUser } from '@/lib/actions/patients.actions';
 
 const Resgister = async  ({params:{userId}}: SearchParamProps) => {
  const user = await getUser(userId);
-
+ Sentry.metrics.set("user_view_register",user.name )
   return (
     <div className="flex h-screen max-h-screen">
    

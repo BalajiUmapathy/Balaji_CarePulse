@@ -42,39 +42,39 @@ export const IdentificationTypes = [
 export const Doctors = [
   {
     image: "/assets/images/dr-green.png",
-    name: "John Green",
+    name: "Dr. Devi Shetty -  Cardiology",
   },
   {
     image: "/assets/images/dr-cameron.png",
-    name: "Leila Cameron",
+    name: "Dr. Ranjana Dhanu - Obstetrics and Gynecology",
   },
   {
     image: "/assets/images/dr-livingston.png",
-    name: "David Livingston",
+    name: "Dr. Sudhansu Bhattacharyya -Neurology",
   },
   {
     image: "/assets/images/dr-peter.png",
-    name: "Evan Peter",
+    name: "Dr. Ravi Sharma - Pediatrics",
   },
   {
     image: "/assets/images/dr-powell.png",
-    name: "Jane Powell",
+    name: "Dr. Neha Patil - Dermatology",
   },
   {
     image: "/assets/images/dr-remirez.png",
-    name: "Alex Ramirez",
+    name: "Dr. Prakash Rao - Orthopedics",
   },
   {
     image: "/assets/images/dr-lee.png",
-    name: "Jasmine Lee",
+    name: "Dr. Shalini Rao - Psychiatry",
   },
   {
     image: "/assets/images/dr-cruz.png",
-    name: "Alyana Cruz",
+    name: "Dr. Ritu Gupta - ENT (Ear, Nose, and Throat)",
   },
   {
     image: "/assets/images/dr-sharma.png",
-    name: "Hardik Sharma",
+    name: "Dr. Sanjay Gupta - Internal Medicine",
   },
 ];
 
